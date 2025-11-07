@@ -24,11 +24,11 @@ os.makedirs(UPLOAD_DIRECTORY, exist_ok=True)
 
 @app.get("/")
 def read_root():
-    return {"message": "¡Hola, equipo! Este es nuestro micro-servicio."}
+    return {"message": "Hello, team! This is our microservice."}
 
 @app.get("/status")
 def get_status():
-    return {"status": "ok", "message": "El servicio está funcionando"}
+    return {"status": "ok", "message": "Service is running"}
 
 # --- NUEVO ENDPOINT PARA SUBIR PDFS ---
 
@@ -60,7 +60,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     return {
         "filename": file.filename,
         "content_type": file.content_type,
-        "status": "archivo guardado",
+        "status": "file saved",
         "path": file_path
     }
 
@@ -99,7 +99,7 @@ def download_file(file_name: str):
     # 2. Verificamos si el archivo existe
     if not os.path.isfile(file_path):
         # Si no existe, lanzamos un error 404
-        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+        raise HTTPException(status_code=404, detail="File not found")
     
     # 3. Devolvemos el archivo usando FileResponse
     #    Esto automáticamente le dirá al navegador que descargue el archivo.
@@ -118,15 +118,15 @@ def delete_file(file_name: str):
     # 2. Verificamos si el archivo existe
     if not os.path.isfile(file_path):
         # Si no existe, lanzamos un error 404
-        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+        raise HTTPException(status_code=404, detail="File not found")
         
     try:
         # 3. Intentamos eliminar el archivo del disco
         os.remove(file_path)
     except Exception as e:
         # Si algo sale mal (ej. permisos), lanzamos un error 500
-        raise HTTPException(status_code=500, detail=f"Error al eliminar el archivo: {e}")
+        raise HTTPException(status_code=500, detail=f"Error deleting file: {e}")
 
     # 4. Devolvemos una respuesta de éxito (sin contenido, código 204)
     #    o podemos devolver un JSON simple.
-    return {"status": "eliminado", "file": file_name}
+    return {"status": "deleted", "file": file_name}
