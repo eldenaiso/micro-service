@@ -1,10 +1,21 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Response
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+from typing import List
 import shutil  # Usaremos shutil para guardar el archivo
 import os      # Usaremos os para crear carpetas
 
-from fastapi.responses import FileResponse
-
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos los encabezados
+)
 
 # Creamos una carpeta para guardar los archivos subidos
 UPLOAD_DIRECTORY = "uploads"

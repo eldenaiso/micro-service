@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-R-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Archivos PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Mi Gestor de Archivos</h1>
+        <p>Una interfaz para el micro-servicio de FastAPI</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <h2>Subir un nuevo PDF</h2>
+            <form id="uploadForm">
+                <input type="file" id="fileInput" accept="application/pdf" required>
+                <button type="submit">Subir Archivo</button>
+            </form>
+            <p id="uploadStatus"></p>
+        </section>
+
+        <section class="card">
+            <h2>Archivos en el Servidor</h2>
+            <button id="refreshButton">Recargar Lista</button>
+            <ul id="fileList">
+                </ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
