@@ -1,33 +1,54 @@
-// ¡IMPORTANTE! Cambia esto si tu API corre en otro puerto.
 const API_URL = "http://127.0.0.1:8000";
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Referencias a elementos
     const uploadForm = document.getElementById("uploadForm");
     const fileInput = document.getElementById("fileInput");
-    const uploadStatus = document.getElementById("uploadStatus");
     const fileList = document.getElementById("fileList");
     const refreshButton = document.getElementById("refreshButton");
+    
+    // --- NUEVOS ELEMENTOS ---
+    const notificationArea = document.getElementById("notificationArea");
+    const confirmModal = document.getElementById("confirmModal");
+    const modalText = document.getElementById("modalText");
+    const modalConfirmBtn = document.getElementById("modalConfirmBtn");
+    const modalCancelBtn = document.getElementById("modalCancelBtn");
 
-    // --- 1. Cargar la lista de archivos al iniciar ---
-    fetchFiles();
+    // Variable para guardar el archivo a eliminar
+    let fileToDelete = null;
 
-    // --- 2. Refrescar la lista al hacer clic en el botón ---
-    refreshButton.addEventListener("click", fetchFiles);
+    // --- NUEVA FUNCIÓN DE NOTIFICACIÓN ---
+    /**
+     * Muestra un mensaje en el área de notificación.
+     * @param {string} message - El mensaje a mostrar.
+     * @param {string} type - 'success', 'error', o 'info'
+     */
+    function showNotification(message, type = 'info') {
+        notificationArea.textContent = message;
+        notificationArea.className = `notification-area ${type}`; // Asigna clase para color
+        notificationArea.style.display = 'block';
 
-    // --- 3. Manejar la subida de archivos ---
+        // Opcional: Ocultar la notificación después de 5 segundos
+        setTimeout(() => {
+            if (notificationArea.textContent === message) { // Solo oculta si es el mismo msg
+                notificationArea.style.display = 'none';
+            }
+        }, 5000);
+    }
+
+    // --- Lógica de subida (actualizada para usar notificaciones) ---
     uploadForm.addEventListener("submit", async (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         
         const file = fileInput.files[0];
         if (!file) {
-            uploadStatus.textContent = "Please select a file."; // <-- Traducido
+            showNotification("Please select a file.", 'error');
             return;
         }
-
         const formData = new FormData();
         formData.append("file", file);
 
-        uploadStatus.textContent = "Uploading..."; // <-- Traducido
+        showNotification("Uploading...", 'info');
         try {
             const response = await fetch(`${API_URL}/upload-pdf/`, {
                 method: "POST",
@@ -35,84 +56,116 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             if (response.ok) {
-                uploadStatus.textContent = `File "${file.name}" uploaded successfully!`; // <-- Traducido
-                fileInput.value = ""; 
-                fetchFiles(); 
+                showNotification(`File "${file.name}" uploaded successfully!`, 'success');
+                fileInput.value = "";
+                fetchFiles();
             } else {
-                throw new Error("Error uploading file."); // <-- Traducido
+                throw new Error("Error uploading file.");
             }
         } catch (error) {
-            console.error("Upload Error:", error); // <-- Traducido
-            uploadStatus.textContent = "Error uploading file. Check the console."; // <-- Traducido
+            console.error("Upload Error:", error);
+            showNotification("Error uploading file. Check the console.", 'error');
         }
     });
 
-    // --- Función para OBTENER y mostrar los archivos ---
+    // --- Lógica de la lista de archivos (actualizada) ---
+    refreshButton.addEventListener("click", fetchFiles);
+
     async function fetchFiles() {
-        fileList.innerHTML = "<li>Loading...</li>"; // <-- Traducido
+        fileList.innerHTML = "<li>Loading...</li>";
         try {
             const response = await fetch(`${API_URL}/files`);
             const data = await response.json();
-
-            fileList.innerHTML = ""; 
+            fileList.innerHTML = "";
+            
             if (data.files && data.files.length > 0) {
                 data.files.forEach(fileName => {
+                    // ... (código para crear li, span, actionsDiv, downloadLink)
                     const li = document.createElement("li");
-                    
                     const span = document.createElement("span");
                     span.textContent = fileName;
                     li.appendChild(span);
-
                     const actionsDiv = document.createElement("div");
                     actionsDiv.className = "actions";
-
-                    // Botón de Descargar
                     const downloadLink = document.createElement("a");
                     downloadLink.href = `${API_URL}/files/${fileName}`;
-                    downloadLink.textContent = "Download"; // <-- Traducido
+                    downloadLink.textContent = "Download";
                     downloadLink.className = "download-btn";
-                    downloadLink.target = "_blank"; 
+                    downloadLink.target = "_blank";
                     actionsDiv.appendChild(downloadLink);
 
-                    // Botón de Eliminar
+                    // --- LÓGICA DE ELIMINACIÓN ACTUALIZADA ---
                     const deleteButton = document.createElement("button");
-                    deleteButton.textContent = "Delete"; // <-- Traducido
+                    deleteButton.textContent = "Delete";
                     deleteButton.className = "delete-btn";
-                    deleteButton.onclick = () => deleteFile(fileName); 
+                    
+                    // Ya no llama a deleteFile, llama a promptDelete
+                    deleteButton.onclick = () => promptDelete(fileName);
+                    
                     actionsDiv.appendChild(deleteButton);
-
                     li.appendChild(actionsDiv);
                     fileList.appendChild(li);
                 });
             } else {
-                fileList.innerHTML = "<li>No files have been uploaded.</li>"; // <-- Traducido
+                fileList.innerHTML = "<li>No files have been uploaded.</li>";
             }
         } catch (error) {
-            console.error("Fetch Files Error:", error); // <-- Traducido
-            fileList.innerHTML = "<li>Error loading files.</li>"; // <-- Traducido
+            console.error("Fetch Files Error:", error);
+            fileList.innerHTML = "<li>Error loading files.</li>";
         }
     }
 
-    // --- Función para ELIMINAR un archivo ---
-    async function deleteFile(fileName) {
-        if (!confirm(`Are you sure you want to delete "${fileName}"?`)) { // <-- Traducido
-            return; 
-        }
+    // --- NUEVAS FUNCIONES PARA EL MODAL DE ELIMINACIÓN ---
 
+    /**
+     * 1. Abre el modal de confirmación
+     */
+    function promptDelete(fileName) {
+        fileToDelete = fileName; // Guarda el archivo que queremos borrar
+        modalText.textContent = `Are you sure you want to delete "${fileName}"?`;
+        confirmModal.style.display = 'flex'; // Muestra el modal
+    }
+
+    /**
+     * 2. Cierra el modal (botón Cancelar)
+     */
+    modalCancelBtn.addEventListener("click", () => {
+        confirmModal.style.display = 'none';
+        fileToDelete = null;
+    });
+
+    /**
+     * 3. Confirma la eliminación (botón "Yes, Delete")
+     */
+    modalConfirmBtn.addEventListener("click", () => {
+        if (fileToDelete) {
+            executeDelete(fileToDelete); // Llama a la función que hace el fetch
+        }
+        confirmModal.style.display = 'none';
+        fileToDelete = null;
+    });
+
+    /**
+     * 4. Lógica de fetch que antes estaba en deleteFile()
+     */
+    async function executeDelete(fileName) {
         try {
             const response = await fetch(`${API_URL}/files/${fileName}`, {
                 method: "DELETE",
             });
 
             if (response.ok) {
-                alert(`File "${fileName}" deleted.`); // <-- Traducido
-                fetchFiles(); 
+                showNotification(`File "${fileName}" deleted.`, 'success'); // <-- Reemplaza alert
+                fetchFiles(); // Recargar la lista
             } else {
-                throw new Error("Error deleting file."); // <-- Traducido
+                throw new Error("Error deleting file.");
             }
         } catch (error) {
-            console.error("Delete File Error:", error); // <-- Traducido
-            alert("Error deleting file."); // <-- Traducido
+            console.error("Delete File Error:", error);
+            showNotification("Error deleting file.", 'error'); // <-- Reemplaza alert
         }
     }
+
+    // Cargar archivos al inicio
+    fetchFiles();
 });

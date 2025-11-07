@@ -1,26 +1,45 @@
 <!DOCTYPE html>
-<html lang="en"> <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF File Manager</title> <link rel="stylesheet" href="style.css">
+    <title>PDF File Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>File Manager</h1> </header>
+        <h1>My File Manager</h1>
+        <p>A frontend for our FastAPI microservice</p>
+    </header>
 
     <main>
+        <div id="notificationArea" class="notification-area" style="display: none;"></div>
+
         <section class="card">
-            <h2>Upload a New PDF</h2> <form id="uploadForm">
+            <h2>Upload a New PDF</h2>
+            <form id="uploadForm">
                 <input type="file" id="fileInput" accept="application/pdf" required>
-                <button type="submit">Upload File</button> </form>
-            <p id="uploadStatus"></p>
+                <button type="submit">Upload File</button>
+            </form>
         </section>
 
         <section class="card">
-            <h2>Files on Server</h2> <button id="refreshButton">Refresh List</button> <ul id="fileList">
+            <h2>Files on Server</h2>
+            <button id="refreshButton">Refresh List</button>
+            <ul id="fileList">
                 </ul>
         </section>
     </main>
+
+    <div id="confirmModal" class="modal-backdrop" style="display: none;">
+        <div class="modal">
+            <p id="modalText"></p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="btn-secondary">Cancel</button>
+                <button id="modalConfirmBtn" class="btn-danger">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
