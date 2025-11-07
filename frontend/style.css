@@ -1,56 +1,181 @@
+/* =========================================
+   Variables de Tema (Paleta Profesional)
+   ========================================= */
+:root {
+    --primary-color: #0d6efd; /* Azul moderno */
+    --primary-hover: #0b5ed7; /* Azul más oscuro para hover */
+    --danger-color: #dc3545;
+    --danger-hover: #bb2d3b;
+    --secondary-color: #6c757d; /* Gris para acciones secundarias */
+    --secondary-hover: #5c636a;
+    
+    --text-color: #212529; /* Casi negro, mejor que #333 */
+    --text-color-light: #495057;
+    --background-color: #f8f9fa; /* Un gris muy claro */
+    --card-background: #ffffff;
+    --border-color: #dee2e6;
+    
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --border-radius: 0.375rem; /* 6px */
+}
+
+/* =========================================
+   Estilos Base
+   ========================================= */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
     line-height: 1.6;
     margin: 0;
     padding: 20px;
 }
-header { text-align: center; margin-bottom: 30px; }
-h1 { color: #2a2a2a; }
-h2 { border-bottom: 2px solid #007bff; padding-bottom: 5px; }
 
-main { max-width: 800px; margin: auto; display: grid; gap: 20px; }
+main {
+    max-width: 800px;
+    margin: 40px auto; /* Más espacio del header */
+    display: grid;
+    gap: 25px;
+}
+
+/* =========================================
+   Tipografía y Encabezados
+   ========================================= */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+header p {
+    color: var(--text-color-light);
+    font-size: 1.1rem;
+}
+
+h2 {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    font-weight: 500;
+    margin-top: 0;
+}
+
+/* =========================================
+   Estilo de Tarjetas (Cards)
+   ========================================= */
 .card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    padding: 25px;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 25px 30px;
+    border: 1px solid var(--border-color);
 }
 
-/* Formulario */
-#uploadForm { display: flex; gap: 10px; margin-bottom: 10px; }
-input[type="file"] { flex-grow: 1; }
-button {
-    background-color: #007bff;
-    color: white;
+/* =========================================
+   Botones (Base)
+   ========================================= */
+button, .actions a {
+    padding: 10px 18px;
     border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: 0.95em;
+    text-decoration: none;
+    color: white;
+    transition: all 0.2s ease-in-out;
+    display: inline-block; /* Para los enlaces <a> */
 }
-button:hover { background-color: #0056b3; }
-#refreshButton { background-color: #28a745; margin-bottom: 15px; }
-#refreshButton:hover { background-color: #218838; }
 
-/* Lista de Archivos */
-#fileList { list-style: none; padding: 0; }
+button:hover, .actions a:hover {
+    transform: translateY(-1px); /* Efecto sutil de "levantar" */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Botón Primario (Subir, Recargar) */
+button[type="submit"], #refreshButton {
+    background-color: var(--primary-color);
+}
+button[type="submit"]:hover, #refreshButton:hover {
+    background-color: var(--primary-hover);
+}
+
+/* =========================================
+   Formulario de Subida
+   ========================================= */
+#uploadForm {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    flex-grow: 1;
+    /* (Se podría estilizar más, pero los inputs[type=file] son complicados) */
+}
+
+#uploadStatus {
+    font-size: 0.9em;
+    color: var(--secondary-color);
+    min-height: 1.2em; /* Evita que la UI "salte" cuando aparece el texto */
+}
+
+/* =========================================
+   Lista de Archivos y Acciones
+   ========================================= */
+#fileList {
+    list-style: none;
+    padding: 0;
+}
+
 #fileList li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.15s ease;
 }
-#fileList li:last-child { border-bottom: none; }
-#fileList span { font-size: 1.1em; }
-#fileList .actions a, #fileList .actions button {
-    text-decoration: none;
-    font-size: 0.9em;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-left: 8px;
+#fileList li:last-child {
+    border-bottom: none;
 }
-.actions .download-btn { background-color: #17a2b8; color: white; }
-.actions .delete-btn { background-color: #dc3545; color: white; }
+#fileList li:hover {
+    background-color: #fcfcfc; /* Un hover casi imperceptible */
+}
+
+#fileList span {
+    font-size: 1.05em;
+    color: var(--text-color-light);
+}
+
+#fileList .actions {
+    display: flex;
+    gap: 8px; /* Espacio entre botones */
+}
+
+/* Botón de Descarga (Secundario) */
+.actions .download-btn {
+    background-color: var(--secondary-color);
+}
+.actions .download-btn:hover {
+    background-color: var(--secondary-hover);
+}
+
+/* Botón de Eliminar (Peligro) */
+.actions .delete-btn {
+    background-color: var(--danger-color);
+}
+.actions .delete-btn:hover {
+    background-color: var(--danger-hover);
+}
+
+#refreshButton {
+    background-color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+#refreshButton:hover {
+    background-color: var(--secondary-hover);
+}
