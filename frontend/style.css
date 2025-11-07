@@ -17,6 +17,9 @@
     
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     --border-radius: 0.375rem; /* 6px */
+
+    --info-color: #0dcaf0;
+    --info-hover: #0aa2c0;
 }
 
 /* =========================================
@@ -268,4 +271,14 @@ input[type="file"] {
 }
 .btn-danger:hover {
     background-color: var(--danger-hover);
+}
+
+/* Botón de Vista (Info) */
+.actions .view-btn {
+    background-color: var(--info-color);
+    color: white;
+    text-align: center; /* Asegura que el texto esté centrado */
+}
+.actions .view-btn:hover {
+    background-color: var(--info-hover);
 }

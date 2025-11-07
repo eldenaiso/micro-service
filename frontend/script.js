@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchFiles() {
         fileList.innerHTML = "<li>Loading...</li>";
         try {
-            const response = await fetch(`${API_URL}/files`);
+            const response = await fetch(`${API_URL}/files?cachebust=${new Date().getTime()}`);
             const data = await response.json();
             fileList.innerHTML = "";
             
@@ -87,6 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     li.appendChild(span);
                     const actionsDiv = document.createElement("div");
                     actionsDiv.className = "actions";
+                    const viewLink = document.createElement("a");
+                    viewLink.href = `${API_URL}/files/${fileName}?action=view`;
+                    viewLink.textContent = "View";
+                    viewLink.className = "view-btn";
+                    viewLink.target = "_blank";
+                    actionsDiv.appendChild(viewLink);
                     const downloadLink = document.createElement("a");
                     downloadLink.href = `${API_URL}/files/${fileName}`;
                     downloadLink.textContent = "Download";
