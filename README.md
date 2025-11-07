@@ -1,23 +1,3 @@
-This is the perfect use for a README.md file.
-
-First, one critical step: For your professor to install the dependencies, you must create a requirements.txt file.
-
-Run this command in your terminal (from the /backend folder, with your virtual environment active):
-
-Bash
-
-# Make sure you are in the /backend folder
-pip freeze > requirements.txt
-This will create a requirements.txt file listing all the libraries needed (FastAPI, Uvicorn, etc.). Now, add this new file to Git:
-
-Bash
-
-# From the root folder
-git add backend/requirements.txt
-git commit -m "Docs: Add requirements.txt for backend dependencies"
-git push origin main
-Now, here is the complete content for your README.md file. Copy and paste all of it into the README.md file in the root of your project.
-
 PDF File Manager Microservice
 This project is a full-stack application consisting of a Python/FastAPI microservice backend and a lightweight HTML/CSS/JavaScript frontend. It provides a complete API and user interface for uploading, viewing, downloading, and deleting PDF files.
 
