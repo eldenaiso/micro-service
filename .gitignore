@@ -11,3 +11,6 @@ __pycache__/
 # Archivos específicos de IDE
 .vscode/
 .idea/
+
+# Ignorar la carpeta de archivos subidos
+uploads/
